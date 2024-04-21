@@ -5,7 +5,7 @@ from fastapi import APIRouter, UploadFile, File, Body
 from models.base import GenericResponseModel
 from services.jds_service import JdsService
 
-jds_router = APIRouter(prefix="/apis/jds", tags=["jds"])
+jds_router = APIRouter(prefix="/apis/jds", tags=["CRUD_jds"])
 
 # get all jds
 @jds_router.get('/',status_code=http.HTTPStatus.OK,response_model=GenericResponseModel)
