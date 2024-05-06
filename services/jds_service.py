@@ -66,6 +66,11 @@ class JdsService:
         )
         qdrant_db.delete_corresponding_vector(points_selector)
 
+    def _get_by_id_jd(self, id_jd: str):
+        jds = Jds()
+        jd_data = jds.find_one({"_id": id_jd})
+        return jd_data
+
     # get all jds
     @staticmethod
     async def get_all_jds() -> GenericResponseModel:
@@ -77,8 +82,8 @@ class JdsService:
     # get jd by id
     @staticmethod
     async def get_by_jd(id_jd: str) -> GenericResponseModel:
-        jds = Jds()
-        jd_data = jds.find_one({"_id": id_jd})
+        jd_service = JdsService()
+        jd_data = jd_service._get_by_id_jd(id_jd)
         if not jd_data:
             # logger.error(extra=context_log_meta.get(), msg=JdsService.ERROR_ITEM_NOT_FOUND)
             return GenericResponseModel(status_code=http.HTTPStatus.NOT_FOUND, error=JdsService.ERROR_ITEM_NOT_FOUND)
@@ -132,8 +137,11 @@ class JdsService:
     # delete jd by id
     @staticmethod
     async def delete_by_jd(id_jd: str) -> GenericResponseModel:
+        jd_service = JdsService()
         jds = Jds()
-        jd_data = jds.find_one({"_id": id_jd})
+        
+        # get jd by id
+        jd_data = jd_service._get_by_id_jd(id_jd)
         if not jd_data:
             # logger.error(extra=context_log_meta.get(), msg=JdsService.ERROR_ITEM_NOT_FOUND)
             return GenericResponseModel(status_code=http.HTTPStatus.NOT_FOUND, error=JdsService.ERROR_ITEM_NOT_FOUND)

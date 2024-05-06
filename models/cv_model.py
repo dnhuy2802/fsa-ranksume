@@ -3,7 +3,6 @@ from pydantic import BaseModel, Field
 
 class CvsModel(BaseModel):
     id_cv: UUID = Field(default_factory=uuid4, alias="_id")
-    name_cv: str = Field(default="name_cv")
     cv_content: str = Field(default="cv_text")
     file_cv_name: str = Field(default=None)
     file_cv_url: str = Field(default=None)
@@ -11,7 +10,6 @@ class CvsModel(BaseModel):
     extract_result: dict = Field(default=None)
     created_by: str = Field(default="Admin")
     created_at: str = Field(default=None)
-    updated_at: str = Field(default=None)
 
     class Config:
         populate_by_name = True
@@ -25,6 +23,5 @@ class CvsModel(BaseModel):
                 "extract_result": {},
                 "created_by": "Admin",
                 "created_at": "2022-01-01 00:00:00",
-                "updated_at": "2022-01-01 00:00:00"
             }
         }
