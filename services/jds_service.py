@@ -133,13 +133,13 @@ class JdsService:
     @staticmethod
     async def delete_by_jd(id_jd: str) -> GenericResponseModel:
         jds = Jds()
-        jd_data = jds.find_one({"_id": id_jd})
-        if not jd_data:
+        jds_data = jds.find_one({"_id": id_jd})
+        if not jds_data:
             # logger.error(extra=context_log_meta.get(), msg=JdsService.ERROR_ITEM_NOT_FOUND)
             return GenericResponseModel(status_code=http.HTTPStatus.NOT_FOUND, error=JdsService.ERROR_ITEM_NOT_FOUND)
         
         # Delete history of JD
-        chat_history_file_name = jd_data["chat_history_file_name"]
+        chat_history_file_name = jds_data["chat_history_file_name"]
         if chat_history_file_name:
             # delete chat_history_file_name
             remove_file_chat_history(chat_history_file_name)

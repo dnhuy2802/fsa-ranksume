@@ -26,7 +26,7 @@ if qdrant_client.collection_exists('rag_documents_test') == False:
     vectors_config=models.VectorParams(size=1024, distance=models.Distance.COSINE),
     )
     print("Collection rag_documents_test created")
-# 3. Check if the jds exists
+# 4. Check if the jds exists
 if qdrant_client.collection_exists('jds') == False:
     qdrant_client.create_collection(
     collection_name="jds",
@@ -35,3 +35,10 @@ if qdrant_client.collection_exists('jds') == False:
     print("Collection jds created")
 else:
     print("Collections already exist")
+# 5. Check if the exams exists
+if qdrant_client.collection_exists('exams') == False:
+    qdrant_client.create_collection(
+    collection_name="exams",
+    vectors_config=models.VectorParams(size=1024, distance=models.Distance.COSINE),
+    )
+    print("Collection exams created")

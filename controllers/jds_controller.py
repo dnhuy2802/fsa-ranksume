@@ -38,7 +38,7 @@ async def create_jd(name_jd: str = Body(...),
         response = await JdsService.create_jd(jd_data_add=jd_data_add)
         return response
     except Exception as e:
-        return GenericResponseModel(status_code=http.HTTPStatus.BAD_REQUEST, error=f"Cannot Create JD with error: {e}")
+        return GenericResponseModel(status_code=http.HTTPStatus.BAD_REQUEST, error=f"Cannot create JD with error: {e}")
 
 # delete jd by id
 @jds_router.delete('/{id_jd}',status_code=http.HTTPStatus.OK,response_model=GenericResponseModel)
