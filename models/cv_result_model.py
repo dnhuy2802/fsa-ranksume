@@ -3,11 +3,14 @@ from pydantic import BaseModel, Field
 
 class CvResultsModel(BaseModel):
     id_cv_result: UUID = Field(default_factory=uuid4, alias="_id")
-    id_cv: UUID = Field(default=None)
-    id_jd: UUID = Field(default=None)
-    id_user: UUID = Field(default=None)
-    id_user_config: UUID = Field(default=None)
+    id_cv: str = Field(default=None)
+    id_jd: str = Field(default=None)
+    id_user: str = Field(default=None)
+    id_user_config: str = Field(default=None)
     cv_score:dict = Field(default=None)
+    matching_status: bool = Field(default=False)
+    created_at: str = Field(default=None)
+    updated_at: str = Field(default=None)
 
     class Config:
         populate_by_name = True

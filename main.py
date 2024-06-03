@@ -11,7 +11,7 @@ from contextlib import asynccontextmanager
 from configs.mongodb import mongodb_client
 from configs.qdrant_db import qdrant_client
 
-from controllers import jds_controller, status, cvs_controller, users_controller, exams_controller
+from controllers import jds_controller, status, cvs_controller, users_controller, matching_cv_controller
 from models.base import GenericResponseModel
 # from logs import logger
 from utils.helper import build_api_response
@@ -39,6 +39,7 @@ app.version = "0.0.1"
 app.include_router(status.status_router)
 app.include_router(jds_controller.jds_router)
 app.include_router(cvs_controller.cvs_router)
+app.include_router(matching_cv_controller.matching_cv_router)
 app.include_router(users_controller.users_router)
 app.include_router(exams_controller.exams_router)
 

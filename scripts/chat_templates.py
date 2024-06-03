@@ -16,7 +16,7 @@ You MUST ONLY respond a string using this format:
 {{
     "education": {{
         "major": str,
-        "major_relevance_score": int,
+        "major_relevance_score": int[0-100],
         "graduation_status": int[0, 1],
         "explanation": str
     }},
@@ -30,15 +30,15 @@ You MUST ONLY respond a string using this format:
         }}
     ],
     "technical_skills": {{
-        "technical_score": int,
+        "technical_score": int[0-100],
         "explanation": str
     }},
     "projects": [
         {{
             "project_name": str,
-            "relevance_score": int,
-            "difficulty_score": int,
-            "duration_score": int,
+            "relevance_score": int[0-100],
+            "difficulty_score": int[0-100],
+            "duration_score": int[0-100],
             "explanation": str
         }}
     ]

@@ -8,7 +8,7 @@ from services.users_service import UsersService
 
 from utils.helper import check_email_input
 
-users_router = APIRouter(prefix="/apis/users", tags=["users"])
+users_router = APIRouter(prefix="/apis/users", tags=["CRUD_users"])
 
 # get all users
 @users_router.get('/',status_code=http.HTTPStatus.OK,response_model=GenericResponseModel)

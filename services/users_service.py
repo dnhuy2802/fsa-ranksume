@@ -21,23 +21,33 @@ class UsersService:
         # find the created user
         created_user = users.find_one({"_id": new_user.inserted_id})
         return created_user
+    def _get_all_users(self):
+        users = Users()
+        users_data = users.find({})
+        return users_data
+
+    def _get_by_id_user(self, id_user: str):
+        users = Users()
+        user_data = users.find_one({"_id": id_user})
+        return user_data
 
     # get all users
     @staticmethod
     async def get_all_users() -> GenericResponseModel:
-        users = Users()
-        users_data = users.find({})
+        users_service = UsersService()
+        users_data = users_service._get_all_users()
         users_list = [user for user in users_data]
         return GenericResponseModel(status_code=http.HTTPStatus.OK, data=users_list, message="Get all users successfully")
     
     # get user by id
     @staticmethod
     async def get_by_user(id_user: str) -> GenericResponseModel:
-        users = Users()
-        user = users.find_one({"_id": id_user})
-        if user is None:
+        user_service = UsersService()
+        user_data = user_service._get_by_id_user(id_user)
+
+        if user_data is None:
             return GenericResponseModel(status_code=http.HTTPStatus.NOT_FOUND, error="User not found")
-        return GenericResponseModel(status_code=http.HTTPStatus.OK, data=user, message="Get user successfully")
+        return GenericResponseModel(status_code=http.HTTPStatus.OK, data=user_data, message="Get user successfully")
 
     # create user
     @staticmethod
@@ -66,9 +76,10 @@ class UsersService:
     @staticmethod
     async def delete_by_user(id_user: str) -> GenericResponseModel:
         users = Users()
+        user_service = UsersService()
         # find user by id
-        user = users.find_one({"_id": id_user})
-        if user is None:
+        user_data = user_service._get_by_id_user(id_user)
+        if user_data is None:
             return GenericResponseModel(status_code=http.HTTPStatus.NOT_FOUND, error="User not found")
         users.delete_one({"_id": id_user})
         return GenericResponseModel(status_code=http.HTTPStatus.OK, message="Delete user successfully")
