@@ -11,7 +11,7 @@ from contextlib import asynccontextmanager
 from configs.mongodb import mongodb_client
 from configs.qdrant_db import qdrant_client
 
-from controllers import jds_controller, status, cvs_controller, users_controller, matching_cv_controller
+from controllers import jds_controller, status, cvs_controller, users_controller, matching_cv_controller, exams_controller
 from models.base import GenericResponseModel
 # from logs import logger
 from utils.helper import build_api_response

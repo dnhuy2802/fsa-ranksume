@@ -29,7 +29,7 @@ def create_exam_file(exam_file_content, id_exam: str):
     save_path = f"tmp/{save_name}"
 
     with open(save_path, "wb") as f:
-        f.write(exam_file_content)
+        f.write(exam_file_content.encode("utf-8"))
 
     # upload file to firebase storage
     exam_file_url = upload_exam_file(save_path)

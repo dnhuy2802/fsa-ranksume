@@ -17,3 +17,8 @@ def file_pdf2text(file_path: str):
     # take page_content from data
     page_content  = data[0].page_content
     return page_content
+
+def file_txt2text(file_path: str):
+    with open(file_path, "r") as file:
+        text = file.read()
+    return text

@@ -8,7 +8,7 @@ from fastapi.encoders import jsonable_encoder
 # import firebase
 from configs.firebase import firebase_bucket
 
-from scripts.context_manager import context_log_meta
+# from scripts.context_manager import context_log_meta
 # from logs import logger
 
 from models.base import GenericResponseModel
@@ -133,7 +133,7 @@ class CvsService:
         # get cv_results using id_cv from mongodb
         cv_results_service = CvResultsService()
         for cv in all_cvs:
-            cv_results = cv_results_service.get_by_id_cv(cv.get("_id"))
+            cv_results = cv_results_service._get_by_id_cv(cv.get("_id"))
             cvs_list.append({
                 "cv": cv,
                 "list_cv_result": cv_results
@@ -150,7 +150,7 @@ class CvsService:
 
         # get cv_results using id_cv from mongodb
         cv_results_service = CvResultsService()
-        cv_results = cv_results_service.get_by_id_cv(id_cv)
+        cv_results = cv_results_service._get_by_id_cv(id_cv)
 
         data_response = {
             "cv": cv,
@@ -218,7 +218,7 @@ class CvsService:
 
         # delete cv_result from mongodb
         cv_results_service = CvResultsService()
-        cv_results_service.delete_by_cv(id_cv)
+        cv_results_service._delete_by_cv(id_cv)
 
         # delete cv from mongodb
         cvs.delete_one({"_id": id_cv})

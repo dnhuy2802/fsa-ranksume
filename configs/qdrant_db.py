@@ -13,32 +13,32 @@ qdrant_client = QdrantClient(
 print("Qdrant Database connected")
 
 # 2. Check if the question_tests exists
-if qdrant_client.collection_exists('question_tests') == False:
+if qdrant_client.collection_exists('RANKSUME_question_tests') == False:
     qdrant_client.create_collection(
-    collection_name="question_tests",
+    collection_name="RANKSUME_question_tests",
     vectors_config=models.VectorParams(size=1024, distance=models.Distance.COSINE),
     )
     print("Collection question_tests created")
 # 3. Check if the rag_documents_test exists
-if qdrant_client.collection_exists('rag_documents_test') == False:
+if qdrant_client.collection_exists('RANKSUME_rag_documents_test') == False:
     qdrant_client.create_collection(
-    collection_name="rag_documents_test",
+    collection_name="RANKSUME_rag_documents_test",
     vectors_config=models.VectorParams(size=1024, distance=models.Distance.COSINE),
     )
     print("Collection rag_documents_test created")
 # 4. Check if the jds exists
-if qdrant_client.collection_exists('jds') == False:
+if qdrant_client.collection_exists('RANKSUME_jds') == False:
     qdrant_client.create_collection(
-    collection_name="jds",
+    collection_name="RANKSUME_jds",
     vectors_config=models.VectorParams(size=1024, distance=models.Distance.COSINE),
     )
     print("Collection jds created")
 else:
     print("Collections already exist")
 # 5. Check if the exams exists
-if qdrant_client.collection_exists('exams') == False:
+if qdrant_client.collection_exists('RANKSUME_exams') == False:
     qdrant_client.create_collection(
-    collection_name="exams",
+    collection_name="RANKSUME_exams",
     vectors_config=models.VectorParams(size=1024, distance=models.Distance.COSINE),
     )
     print("Collection exams created")

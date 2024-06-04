@@ -4,7 +4,7 @@ import pytz
 
 from fastapi.encoders import jsonable_encoder
 
-from scripts.context_manager import context_log_meta
+# from scripts.context_manager import context_log_meta
 # from logs import logger
 
 from models.base import GenericResponseModel
@@ -34,7 +34,7 @@ class JdsService:
 
     # upload to qdrant
     async def _upload_jd_summary_to_qdrant(self, id_jd: str, jd_summary: str):
-        qdrant_db = QdrantDb(collection_name="jds")
+        qdrant_db = QdrantDb(collection_name="RANKSUME_jds")
         # get collection_info
         collection_info = qdrant_db.collection_info
         points_count = collection_info.points_count
@@ -50,7 +50,7 @@ class JdsService:
     
     # delete jd summary from qdrant
     async def _delete_jd_summary_from_qdrant(self, id_jd: str):
-        qdrant_db = QdrantDb(collection_name="jds")
+        qdrant_db = QdrantDb(collection_name="RANKSUME_jds")
         # get models_qdrant
         models_qdrant = qdrant_db.models_qdrant
         # delete corresponding vector from Qdrant
@@ -89,10 +89,12 @@ class JdsService:
             return GenericResponseModel(status_code=http.HTTPStatus.NOT_FOUND, error=JdsService.ERROR_ITEM_NOT_FOUND)
         return GenericResponseModel(status_code=http.HTTPStatus.OK, message="Get JD by ID", data=jd_data)
     
+    # create jd
     @staticmethod
     async def create_jd(jd_data_add: dict) -> GenericResponseModel:
         # summary jd
         jd_summary = summary_jd(jd_data_add["jd_text"])
+
         # Specify the Vietnam time zone
         vietnam_timezone = pytz.timezone('Asia/Ho_Chi_Minh')
         # Get the current time in UTC
@@ -113,7 +115,7 @@ class JdsService:
         jds_model.created_at = vietnam_now
         jds_model.updated_at = vietnam_now
 
-        # add to mongodb
+        # add to MongoDB
         jd_service = JdsService()
         created_jd = await jd_service._create_jd(jds_model)
 
@@ -139,20 +141,15 @@ class JdsService:
     async def delete_by_jd(id_jd: str) -> GenericResponseModel:
         jd_service = JdsService()
         jds = Jds()
-<<<<<<< HEAD
-        jds_data = jds.find_one({"_id": id_jd})
-        if not jds_data:
-=======
         
         # get jd by id
         jd_data = jd_service._get_by_id_jd(id_jd)
         if not jd_data:
->>>>>>> 2a213a306712cd39c31323a340c2441a409aef3b
             # logger.error(extra=context_log_meta.get(), msg=JdsService.ERROR_ITEM_NOT_FOUND)
             return GenericResponseModel(status_code=http.HTTPStatus.NOT_FOUND, error=JdsService.ERROR_ITEM_NOT_FOUND)
         
         # Delete history of JD
-        chat_history_file_name = jds_data["chat_history_file_name"]
+        chat_history_file_name = jd_data["chat_history_file_name"]
         if chat_history_file_name:
             # delete chat_history_file_name
             remove_file_chat_history(chat_history_file_name)

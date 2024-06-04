@@ -32,14 +32,16 @@ class ExamsService:
         created_exam = exams.find_one({"_id": new_exam.inserted_id})
         return created_exam
     
+    
     # upload to qdrant
     async def _upload_exam_description_to_qdrant(self, id_exam: str, exam_description: str):
-        qdrant_db = QdrantDb(collection_name="exams")
+        qdrant_db = QdrantDb(collection_name="RANKSUME_exams")
         # get collection_info
         collection_info = qdrant_db.collection_info
         points_count = collection_info.points_count
         # get models_qdrant
         models_qdrant = qdrant_db.models_qdrant
+        # text2vector
         exam_description_vector = text2vector(exam_description)
         payload = {"id_exam": id_exam}
         point = models_qdrant.PointStruct(id=points_count+1, payload=payload, vector=exam_description_vector)
@@ -48,8 +50,8 @@ class ExamsService:
         qdrant_db.upsert_points(points)
 
     # delete exam description from qdrant
-    async def _delete_exam_file_from_qdrant(self, id_exam: str):
-        qdrant_db = QdrantDb(collection_name="exams")
+    async def _delete_exam_description_from_qdrant(self, id_exam: str):
+        qdrant_db = QdrantDb(collection_name="RANKSUME_exams")
         # get models_qdrant
         models_qdrant = qdrant_db.models_qdrant
         # delete corresponding vector from Qdrant
@@ -64,6 +66,11 @@ class ExamsService:
             )
         )
         qdrant_db.delete_corresponding_vector(points_selector)
+
+    def _get_by_id_exam(self, id_jd: str):
+        exams = Exams()
+        exam_data = exams.find_one({"_id": id_jd})
+        return exam_data
     
     # get all exams
     @staticmethod
@@ -71,14 +78,13 @@ class ExamsService:
         exams = Exams()
         exams_data = exams.find({})
         exams_list = [exam for exam in exams_data]
-        return GenericResponseModel(status_code=http.HTTPStatus.OK, message="Get All JD", data=exams_list)
+        return GenericResponseModel(status_code=http.HTTPStatus.OK, message="Get all Exams", data=exams_list)
     
-    # get exam by id
     @staticmethod
     async def get_exam_by_id(id_exam: str) -> GenericResponseModel:
-        exams = Exams()
-        exam_data = exams.find_one({"_id": id_exam})
-        if exam_data is None:
+        exam_service = ExamsService()
+        exam_data = exam_service._get_by_id_exam(id_exam)
+        if not exam_data:
             return GenericResponseModel(status_code=http.HTTPStatus.NOT_FOUND, error=ExamsService.ERROR_ITEM_NOT_FOUND)
         return GenericResponseModel(status_code=http.HTTPStatus.OK, message="Get Exam by ID", data=exam_data)
     
@@ -110,10 +116,11 @@ class ExamsService:
         
         # upload to firebase storage
         exam_file_data = {}
-        exam_file_url, save_path = create_exam_file(exams_model.exam_file_content, id_exam)
+        exam_file_url, save_name = create_exam_file(exams_model.exam_file_content, id_exam)
         exam_file_data["exam_file_url"] = exam_file_url
+        exam_file_data["exam_file_name"] = save_name
         # exam_file_data["exam_file_name"] = exams_model.exam_file_name
-        exam_file_data["exam_file_name"] = save_path
+        # exam_file_data["exam_file_name"] = save_path
 
         # update exam_file_url to MongoDB
         exams = Exams()
@@ -124,19 +131,22 @@ class ExamsService:
     # deleted exam by id
     @staticmethod
     async def delete_exam_by_id(id_exam: str) -> GenericResponseModel:
+        exam_service = ExamsService()
         exams = Exams()
-        exams_data = exams.find_one({"_id": id_exam})
-        if not exams_data:
+
+        # get exam by id
+        exam_data = exam_service._get_by_id_exam(id_exam)
+        if not exam_data:
             return GenericResponseModel(status_code=http.HTTPStatus.NOT_FOUND, error=ExamsService.ERROR_ITEM_NOT_FOUND)\
         
-        exam_file_name = exams_data.get("exam_file_name")
+        exam_file_name = exam_data["exam_file_name"]
         if exam_file_name:
             # remove exam file from firebase storage
             remove_exam_file(exam_file_name)
 
         # delete exam description from qdrant
         exam_service = ExamsService()
-        await exam_service._delete_exam_file_from_qdrant(id_exam=id_exam)
+        await exam_service._delete_exam_description_from_qdrant(id_exam=id_exam)
         
         # delete exam from MongoDB
         exams.delete_one({"_id": id_exam})

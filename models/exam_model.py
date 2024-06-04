@@ -17,6 +17,6 @@ class ExamsModel(BaseModel):
                 "exam_description": "exam_description",
                 "exam_file_name": "exam_file_name",
                 "exam_file_url": "exam_file_url",
-                "exam_file_content": "exam_file_content"
+                # "exam_file_content": "exam_file_content"
             }
         }
