@@ -11,7 +11,7 @@ from contextlib import asynccontextmanager
 from configs.mongodb import mongodb_client
 from configs.qdrant_db import qdrant_client
 
-from controllers import jds_controller, status, cvs_controller, users_controller, matching_cv_controller
+from controllers import jds_controller, status, cvs_controller, users_controller, matching_cv_controller, exams_controller
 from models.base import GenericResponseModel
 # from logs import logger
 from utils.helper import build_api_response
@@ -41,6 +41,7 @@ app.include_router(jds_controller.jds_router)
 app.include_router(cvs_controller.cvs_router)
 app.include_router(matching_cv_controller.matching_cv_router)
 app.include_router(users_controller.users_router)
+app.include_router(exams_controller.exams_router)
 
 # register exception handlers here
 @app.exception_handler(ValidationError)
@@ -64,7 +65,7 @@ async def not_found_exception_handler(request: Request, exc: HTTPException):
 @app.exception_handler(RequestValidationError)
 async def request_validation_exception_handler(request: Request, exc):
     # logger.error(extra=context_log_meta.get(), msg=f"Request Validation Failed: {exc}")
-    return build_api_response(GenericResponseModel(status_code=http.HTTPStatus.BAD_REQUEST,
+    return build_api_response(GenericResponseModel(status_code=http.HTTPStatus.BAD_REQUEST, 
                                                    error=f"Request Validation Failed: {json.loads(str(exc))}"))
 
 # Create a GET method that responds with HTML code
